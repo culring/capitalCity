@@ -1,6 +1,7 @@
 package application;
 
 import application.exceptions.WrongInputException;
+import application.parser.Parser;
 import application.solver.BFSSolver;
 import application.solver.FindAndUnionSolver;
 import application.solver.Solver;
@@ -35,74 +36,65 @@ public class Controller {
     public Controller(Stage primaryStage, List<String> args){
         this.primaryStage = primaryStage;
 
-        if(args.size() == 0){
-            System.out.println("Invalid command. Run programme with option -help to see all commands");
-        }
-        else{
-            switch (args.get(0)) {
-                case "-file":
-                    if(args.size() < 2){
-                        System.out.println("Invalid command. Run programme with option -help to see all commands");
-                        break;
-                    }
-                    isTestMode = false;
-                    primaryStage.setTitle("Capital city - " + args.get(1));
-                    try {
-                        initView(getDataFromFile(args.get(1)));
-                    } catch (IOException e) {
-                        System.err.println("Couldn't open a file");
-                    } catch (WrongInputException e) {
-                        System.err.println(
-                                "File contains errors. Required format file:\n" +
-                                "-> a number of vertices\n" +
-                                "-> a label of a capital city\n" +
-                                "-> a number of connections\n" +
-                                "-> connections one per line, eg. 1 2\n" +
-                                "-> a number of connections to remove\n" +
-                                "-> connections to remove one per line."
-                        );
-                    }
-                    if(args.size() >= 3) {
-                        if (args.get(2).equals("bfs")) {
-                            solverType = SolverType.BFS;
-                        } else if (args.get(2).equals("find_and_union")) {
-                            solverType = SolverType.FIND_AND_UNION;
-                        }
-                    }
-                    break;
+        try {
+            Map<String, Map<String, Object>> options = Parser.parse(args);
 
-                case "-generate":
-                    if(args.size() < 2){
-                        System.out.println("Invalid command. Run programme with option -help to see all commands");
-                        break;
-                    }
-                    isTestMode = true;
-                    primaryStage.setTitle("Capital city - " + "test mode");
-                    numberOfVerticesInTests = Integer.valueOf(args.get(1));
-                    if(args.size() >= 3) {
-                        if (args.get(2).equals("bfs")) {
-                            solverType = SolverType.BFS;
-                        } else if (args.get(2).equals("find_and_union")) {
-                            solverType = SolverType.FIND_AND_UNION;
-                        }
-                    }
-                    initView(generateData(numberOfVerticesInTests));
-                    break;
-
-                case "-help":
-                    System.out.println(
-                      "-file <filename> [<solver_type>] - load test from file\n" +
-                      "-generate <size> [<solver_type>] - generate tests with given size\n" +
-                      "-help - display all oommands\n" +
-                      "\n" +
-                      "solver_type := [bfs | find_and_union]\n" +
-                      "by default solver_type = find_and_union"
+            if(options.containsKey("--file")){
+                isTestMode = false;
+                String filename = (String)options.get("--file").get("filename");
+                primaryStage.setTitle("Capital city - " + filename);
+                try{
+                    initView(loadDataFromFile(filename));
+                }
+                catch(IOException e){
+                    System.err.println("Couldn't open a file");
+                }
+                catch(WrongInputException e){
+                    System.err.println(
+                            "File contains errors. Required format file:\n" +
+                            "-> a number of vertices\n" +
+                            "-> a label of a capital city\n" +
+                            "-> a number of connections\n" +
+                            "-> connections one per line, eg. 1 2\n" +
+                            "-> a number of connections to remove\n" +
+                            "-> connections to remove one per line."
                     );
-                    break;
-
-                default:
-                    System.out.println("Invalid command. Run programme with option -help to see all commands");
+                }
+                if(options.containsKey("--bfs")){
+                    solverType = SolverType.BFS;
+                }
+                else if(options.containsKey("--find_and_union")){
+                    solverType = SolverType.FIND_AND_UNION;
+                }
             }
+            else if(options.containsKey("--generate")){
+                isTestMode = true;
+                primaryStage.setTitle("Capital city - " + "test mode");
+                numberOfVerticesInTests = (Integer)options.get("--generate").get("size");
+                if(options.containsKey("--bfs")){
+                    solverType = SolverType.BFS;
+                }
+                else if(options.containsKey("--find_and_union")){
+                    solverType = SolverType.FIND_AND_UNION;
+                }
+                initView(generateData(numberOfVerticesInTests));
+            }
+            else if(options.containsKey("--help")){
+                System.err.println(
+                        "-file <filename> [<solver_type>] - load test from file\n" +
+                        "-generate <size> [<solver_type>] - generate tests with given size\n" +
+                        "-help - display all oommands\n" +
+                        "\n" +
+                        "solver_type := [bfs | find_and_union]\n" +
+                        "by default solver_type = find_and_union"
+                );
+            }
+            else{
+                System.err.println("Invalid command. Run programme with option --help to see all commands");
+            }
+        }
+        catch(WrongInputException e){
+            System.err.println("Invalid command. Run programme with option --help to see all commands");
         }
     }
 
@@ -197,7 +189,7 @@ public class Controller {
         );
     }
 
-    private List<List<Integer>> getDataFromFile(String path) throws IOException, WrongInputException{
+    private List<List<Integer>> loadDataFromFile(String path) throws IOException, WrongInputException{
         List<List<Integer>> output = loadFileAsListsOfIntegers(path);
         checkData(output);
         return output;
