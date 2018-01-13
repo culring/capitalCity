@@ -46,8 +46,10 @@ public class View {
         root.add(initGraphLayout(graphData), 0, 0);
         root.add(initUILayout(erasingGraphData), 1, 0);
 
-        Scene scene = new Scene(root, GRAPH_SECTION_SIZE + UI_SECTION_WIDTH - 10, HEIGHT - 10);
+        Scene scene = new Scene(root, GRAPH_SECTION_SIZE + UI_SECTION_WIDTH, HEIGHT);
         scene.getStylesheets().add("application/view/viewGrayWhite.css");
+        this.primaryStage.setWidth(GRAPH_SECTION_SIZE + UI_SECTION_WIDTH);
+        this.primaryStage.setHeight(HEIGHT + 30);
         this.primaryStage.setScene(scene);
         this.primaryStage.setResizable(false);
         this.primaryStage.show();
