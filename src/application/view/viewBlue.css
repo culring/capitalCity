@@ -1,0 +1,23 @@
+.root {
+    -fx-background-color: cornflowerblue;
+}
+
+.node1 {
+    -fx-fill: white;
+}
+
+.node2 {
+    -fx-fill: black;
+}
+
+.edge1 {
+    -fx-stroke: white;
+}
+
+.edge2 {
+    -fx-stroke: black;
+}
+
+.UILayout {
+    -fx-background-color: white;
+}

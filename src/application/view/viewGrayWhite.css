@@ -1,0 +1,54 @@
+.root {
+    -fx-background-color: #2B2B2B;
+}
+
+.node1 {
+    -fx-fill: white;
+}
+
+.node2 {
+    -fx-fill: #656565;
+}
+
+.node3 {
+    -fx-fill: orange;
+}
+
+.node4 {
+    -fx-fill: #7ec0c0;
+}
+
+.edge {
+    -fx-stroke-width: 2px;
+}
+
+.edge1 {
+    -fx-stroke: white;
+}
+
+.edge2 {
+    -fx-stroke: #656565;
+}
+
+.edge3 {
+    -fx-stroke: orange;
+}
+
+.UILayout {
+    -fx-background-color: darkslategray;
+}
+
+.button {
+    -fx-text-alignment: center;
+    -fx-max-width: 1000px;
+    -fx-max-height: 1000px;
+}
+
+.buttonsSection {
+    -fx-alignment: center;
+    -fx-padding: 30.0 0.0 30.0 0.0;
+}
+
+.list-cell:selected {
+    -fx-background-color: darkslategray;
+}
