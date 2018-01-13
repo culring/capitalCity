@@ -1,4 +1,4 @@
-package application.exceptions;
+package application.controller.exceptions;
 
 /**
  * Created by Culring on 2018-01-12.

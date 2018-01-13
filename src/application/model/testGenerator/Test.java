@@ -1,4 +1,4 @@
-package application.testGenerator;
+package application.model.testGenerator;
 
 import java.util.*;
 

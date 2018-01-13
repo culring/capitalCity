@@ -1,4 +1,4 @@
-package application.solver;
+package application.model.solver;
 
 import javafx.util.Pair;
 

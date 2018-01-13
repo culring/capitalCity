@@ -1,11 +1,10 @@
 package application.controller;
 
-import application.exceptions.WrongInputException;
-import application.parser.Parser;
-import application.solver.BFSSolver;
-import application.solver.FindAndUnionSolver;
-import application.solver.Solver;
-import application.testGenerator.Test;
+import application.controller.exceptions.WrongInputException;
+import application.model.solver.BFSSolver;
+import application.model.solver.FindAndUnionSolver;
+import application.model.solver.Solver;
+import application.model.testGenerator.Test;
 import application.view.View;
 import javafx.stage.Stage;
 import javafx.util.Pair;

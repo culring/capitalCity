@@ -1,6 +1,6 @@
-package application.parser;
+package application.controller;
 
-import application.exceptions.WrongInputException;
+import application.controller.exceptions.WrongInputException;
 
 import java.util.HashMap;
 import java.util.List;
