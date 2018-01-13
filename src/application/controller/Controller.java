@@ -1,4 +1,4 @@
-package application;
+package application.controller;
 
 import application.exceptions.WrongInputException;
 import application.parser.Parser;
