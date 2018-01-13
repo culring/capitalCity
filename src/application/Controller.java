@@ -35,8 +35,9 @@ public class Controller {
 
     public Controller(Stage primaryStage, List<String> args){
         this.primaryStage = primaryStage;
+        String INVALID_OPTION_MESSAGE = "Invalid command. Run programme with option --help to see all options";
 
-        try {
+        try{
             Map<String, Map<String, Object>> options = Parser.parse(args);
 
             if(options.containsKey("--file")){
@@ -81,20 +82,19 @@ public class Controller {
             }
             else if(options.containsKey("--help")){
                 System.err.println(
-                        "-file <filename> [<solver_type>] - load test from file\n" +
-                        "-generate <size> [<solver_type>] - generate tests with given size\n" +
-                        "-help - display all oommands\n" +
-                        "\n" +
-                        "solver_type := [bfs | find_and_union]\n" +
-                        "by default solver_type = find_and_union"
+                        "--file <filename> [<solver_type>] - load test from file\n" +
+                        "--generate <size> [<solver_type>] - generate tests with given size\n" +
+                        "--help - display all oommands\n" +
+                        "<solver_type> := [--bfs|--find_and_union]\n" +
+                        "by default solver_type = --find_and_union"
                 );
             }
             else{
-                System.err.println("Invalid command. Run programme with option --help to see all commands");
+                System.err.println(INVALID_OPTION_MESSAGE);
             }
         }
         catch(WrongInputException e){
-            System.err.println("Invalid command. Run programme with option --help to see all commands");
+            System.err.println(INVALID_OPTION_MESSAGE);
         }
     }
 
