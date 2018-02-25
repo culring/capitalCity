@@ -16,7 +16,16 @@ public class Parser {
                 isAlgorithmChosen = false;
 
         while(options.size() > 0) {
-            if(options.get(0).equals("--generate")) {
+            if(options.get(0).equals("--time")){
+                if (isBaseOptionDefined) {
+                    throw new WrongInputException();
+                }
+                isBaseOptionDefined = true;
+
+                parsedOptions.put("--time", null);
+                options = options.subList(1, options.size());
+            }
+            else if(options.get(0).equals("--generate")) {
                 if (isBaseOptionDefined) {
                     throw new WrongInputException();
                 }

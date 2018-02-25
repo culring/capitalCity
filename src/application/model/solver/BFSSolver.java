@@ -54,13 +54,15 @@ public class BFSSolver implements Solver {
             removeConnection(edge[0], edge[1]);
             // repeat that for each end of an edge
             for(int j = 0; j<2; ++j){
-                // all nodes that became disconnected
+                // all nodes that become disconnected
                 // during this iteration of removing edges
                 Vector<Integer> disconnectedNodes;
-                // check if lost its connection
+                disconnectedNodes = getSearchTreeIfNotConnected(edge[j], capital);
+                // check if looses its connection
                 // to a capital during this iteration
                 if(edge[j] != capital && isConnectedToCapital[edge[j]] &&
-                        (disconnectedNodes = getSearchTreeIfNotConnected(edge[j], capital)) != null){
+                        //(disconnectedNodes = getSearchTreeIfNotConnected(edge[j], capital)) != null){
+                        disconnectedNodes != null){
                     isConnectedToCapital[edge[j]] = false;
                     // mark that all nodes accessible from
                     // this node lost their connection to a capital
@@ -68,7 +70,6 @@ public class BFSSolver implements Solver {
                         removalTime.set(disconnectedNode, i);
                         isConnectedToCapital[disconnectedNode] = false;
                     }
-                    break;
                 }
             }
         }
@@ -92,7 +93,7 @@ public class BFSSolver implements Solver {
             searchTree.add(node);
             if(node == nodeToCheck){
                 isFound = true;
-                break;
+                //break;
             }
             isVisited[node] = true;
             for(int neighbour : neighbours[node]){

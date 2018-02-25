@@ -5,6 +5,7 @@ import application.model.solver.BFSSolver;
 import application.model.solver.FindAndUnionSolver;
 import application.model.solver.Solver;
 import application.model.testGenerator.Test;
+import application.model.timeMeasurement.TimeMeasurement;
 import application.view.View;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -39,7 +40,20 @@ public class Controller {
         try{
             Map<String, Map<String, Object>> options = Parser.parse(args);
 
-            if(options.containsKey("--file")){
+            if(options.containsKey("--time")){
+                List<Integer> amounts = new LinkedList<Integer>();
+                for(int i = 1; i<=10; ++i){
+                    amounts.add(i*1000);
+                }
+                TimeMeasurement timeMeasurement = new TimeMeasurement(
+                        amounts,
+                        100
+                );
+                //TimeMeasurement timeMeasurement = new TimeMeasurement(10000, 10000, 100);
+                timeMeasurement.warmup();
+                timeMeasurement.doMeasurements();
+            }
+            else if(options.containsKey("--file")){
                 isTestMode = false;
                 String filename = (String)options.get("--file").get("filename");
                 primaryStage.setTitle("Capital city - " + filename);
@@ -103,8 +117,8 @@ public class Controller {
         }
         int numberOfVertices = data.get(0).get(0),
                 capital = data.get(1).get(0),
-                connectionsNumber = data.get(2).get(0);
-        numberOfEdgesToRemove = data.get(3 + connectionsNumber).get(0);
+                numberOfConnections = data.get(2).get(0),
+                numberOfEdgesToRemove = data.get(3 + numberOfConnections).get(0);
         this.view = new View(primaryStage, data);
         if(isTestMode) {
             view.setBottomButton(event -> initView(generateData(numberOfVerticesInTests)));
@@ -167,23 +181,23 @@ public class Controller {
             this.solver = new FindAndUnionSolver(
                     numberOfVertices,
                     capital,
-                    convertListOfListsToListOfPairs(data.subList(3, 3 + connectionsNumber))
+                    convertListOfListsToListOfPairs(data.subList(3, 3 + numberOfConnections))
             );
         }
         else if(solverType == SolverType.BFS){
             this.solver = new BFSSolver(
                     numberOfVertices,
                     capital,
-                    convertListOfListsToListOfPairs(data.subList(3, 3 + connectionsNumber))
+                    convertListOfListsToListOfPairs(data.subList(3, 3 + numberOfConnections))
             );
         }
         List<Integer> removalTimesData = solver.removeConnections(
-                convertListOfListsToListOfPairs(data.subList(4 + connectionsNumber, data.size()))
+                convertListOfListsToListOfPairs(data.subList(4 + numberOfConnections, data.size()))
         );
         List<List<Integer>> modifiedRemovalTimesData = modifyRemovalTimeData(removalTimesData,numberOfEdgesToRemove);
         view.disableNodesWithEdges(modifiedRemovalTimesData.get(0));
         statesOfGraph = new StatesOfGraph(
-                data.subList(4 + connectionsNumber, data.size()),
+                data.subList(4 + numberOfConnections, data.size()),
                 modifiedRemovalTimesData.subList(1, modifiedRemovalTimesData.size())
         );
     }
@@ -244,30 +258,30 @@ public class Controller {
     }
 
     private List<List<Integer>> generateData(int size){
-        List<List<Integer>> connections = Test.getTest(size);
-        return convertDataToListData(size, new Random().nextInt(size), connections, connections);
+        List<List<Integer>> testData = Test.getTest(size);
+        return testData;
     }
 
-    private List<List<Integer>> convertDataToListData(int numberOfVertices, int capital, List<List<Integer>> connections,
-                                                      List<List<Integer>> connectionsToRemove){
-        List<List<Integer>> output = new LinkedList<>();
-        List<Integer> list = new LinkedList<>();
-        list.add(numberOfVertices);
-        output.add(list);
-        list = new LinkedList<>();
-        list.add(capital);
-        output.add(list);
-        list = new LinkedList<>();
-        list.add(connections.size());
-        output.add(list);
-        output.addAll(connections);
-        list = new LinkedList<>();
-        list.add(connectionsToRemove.size());
-        output.add(list);
-        output.addAll(connectionsToRemove);
-
-        return output;
-    }
+    //private List<List<Integer>> convertDataToListData(int numberOfVertices, int capital, List<List<Integer>> connections,
+    //                                                  List<List<Integer>> connectionsToRemove){
+    //    List<List<Integer>> output = new LinkedList<>();
+    //    List<Integer> list = new LinkedList<>();
+    //    list.add(numberOfVertices);
+    //    output.add(list);
+    //    list = new LinkedList<>();
+    //    list.add(capital);
+    //    output.add(list);
+    //    list = new LinkedList<>();
+    //    list.add(connections.size());
+    //    output.add(list);
+    //    output.addAll(connections);
+    //    list = new LinkedList<>();
+    //    list.add(connectionsToRemove.size());
+    //    output.add(list);
+    //    output.addAll(connectionsToRemove);
+    //
+    //    return output;
+    //}
 
     private List<List<Integer>> loadFileAsListsOfIntegers(String path) throws IOException, WrongInputException{
             List<String> lines;
